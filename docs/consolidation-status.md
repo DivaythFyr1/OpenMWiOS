@@ -31,6 +31,6 @@ The previously observed Xcode 27.1 build belongs to the local audit, not this co
 
 ## Publication and access
 
-Git read access and push dry-run succeeded for `DivaythFyr1/OpenMWiOS`. GitHub API requests failed at proxy CONNECT with HTTP 403, including an escalated check. Authenticated identity, formal fork relationship and paginated PR states/reviews/checks remain unverified. Git ref completeness does not establish API inventory completeness.
+Git read access, push dry-run and actual creation of remote branch `audit/consolidate-baseline` succeeded for `DivaythFyr1/OpenMWiOS`, demonstrating branch write permission. `gh pr create --draft` failed with `Post https://api.github.com/graphql: Forbidden`; no PR was created. Main remains at `3e86accde6b3bc01b9f6475ad85dbed746db21bc`. The prepared PR text is retained in [recovery/pull-request.md](recovery/pull-request.md). GitHub API requests failed at proxy CONNECT with HTTP 403, including an escalated check. Authenticated identity, formal fork relationship and paginated PR states/reviews/checks remain unverified. Git ref completeness does not establish API inventory completeness.
 
 The environment draft adds `api.github.com` while retaining presets and updates install/start instructions for the recovered source. Saving the draft does not apply or publish it. Review/save the settings and publish as required by the environment UI, then retry API verification and PR creation. Do not send secret values in chat. See the final task report for actual branch-push/PR outcome.
