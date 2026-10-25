@@ -1,5 +1,8 @@
 # OpenMW for iOS
 
+For the iOS 27 lifecycle candidate and physical-device test procedure, see
+[Lifecycle migration](docs/ios27-lifecycle.md).
+
 Current recovery baseline: **WO33 `49f5f0bd80e83ef87eaebd3f69c07072796738aa`**.
 See [consolidation status](docs/consolidation-status.md), [roadmap](docs/ROADMAP.md),
 and [audit](docs/repository-audit.md) before development. Historical work orders

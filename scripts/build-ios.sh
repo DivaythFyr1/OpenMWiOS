@@ -26,6 +26,7 @@ PREFIX="${BUILD_DIR}/prefix/${VCPKG_TRIPLET}"
 "${DEPS_DIR}/vcpkg-pinned/vcpkg" install \
     --x-manifest-root="${ROOT_DIR}" \
     --triplet="${VCPKG_TRIPLET}" \
+    --overlay-ports="${ROOT_DIR}/ports" \
     --overlay-triplets="${ROOT_DIR}/triplets" \
     --x-install-root="${BUILD_DIR}/vcpkg_installed"
 
