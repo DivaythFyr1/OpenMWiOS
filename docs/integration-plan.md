@@ -1,6 +1,6 @@
 # Phase 2 proposal — Consolidate a traceable local-development baseline
 
-Status: **authorized after access recovery; not executed**. This plan follows the findings in [repository-audit.md](repository-audit.md) and the exact refs in [branch-inventory.md](branch-inventory.md). The subsequent user instruction authorizes Phase 2 after authentication, remote refresh, inventory completion, and baseline revalidation. On 2026-10-25, authenticated API requests and an isolated public Git fetch failed DNS resolution before reaching GitHub. Token validity and permissions remain unverified; cached refs still support WO33, but live inventory completion is blocked. See the [access recovery record](repository-audit.md#access-recovery-verification--2026-10-25). No consolidation or application changes have begun.
+Status: **review branch prepared; API publication and macOS qualification outstanding** (2026-10-25). See [consolidation status](consolidation-status.md) and the live audit update. The original plan below is preserved; its statements that consolidation has not begun describe the earlier proposal, not current execution. The branch starts at exact WO33 and merges the fork's audit-only main commit, preserving both histories. Main has not been changed. No optional build adaptations or runtime changes were adopted.
 
 ## Decision proposed
 
@@ -107,4 +107,4 @@ Then evaluate the smallest maintainable scene integration at the SDL/UIKit bound
 
 Acceptance must include Xcode Run, SDL initialization, main menu, entering the world, background/resume, and absence of lifecycle crashes on the physical device. Retain GL4ES/GLES and game logic. Renderer correctness, distant fog, and view-distance optimization remain later phases, with no lowering of visual quality to mask faults.
 
-**This document ends at a proposal. No Phase 2 consolidation or Phase 3 implementation has been performed.**
+**Cloud preparation implements the history/documentation portion only. Phase 2 macOS build gates and Phase 3 device gates remain outstanding.**

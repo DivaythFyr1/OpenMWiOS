@@ -2,7 +2,19 @@
 
 Audit date: 2026-10-24. Scope: Phase 1 of [ROADMAP.md](ROADMAP.md) only.
 
-## Executive finding
+## Cloud recovery update — 2026-10-25
+
+The original local audit below is retained as historical evidence. Live Git access now works for both repositories through platform authentication. All 29 upstream branch tips and three tags match the audit. All 22 advertised PR heads and merge refs have been fetched, including external #21 and new #22. See the completed [live inventory](branch-inventory.md#live-cloud-refresh--2026-10-25).
+
+WO33 `49f5f0bd80e83ef87eaebd3f69c07072796738aa` remains the recommended baseline: its product tree is identical to `93f892dd0cf9834259b4cad2045ddb2ef9c53ed9` outside Evidence, and the newly discovered PR adds only deferred workflows. Original main is an ancestor. A review branch now merges the fork's audit-document commit `3e86accde6b3bc01b9f6475ad85dbed746db21bc` into WO33 without rewriting either history. No renderer, lifecycle, dependency-pin, test, or feature changes were introduced.
+
+API requests via `gh api`, including an escalated attempt, failed with Forbidden. A direct HTTPS diagnostic identified proxy CONNECT HTTP 403 before an API response. This is not evidence of an invalid token or absent repository write permission. API fork relationship, authenticated identity, paginated PR states/reviews/checks remain unverified. Git push dry-run succeeded; actual publication outcome is recorded in [consolidation status](consolidation-status.md). The missing `api.github.com` network destination is saved for environment review, not assumed active.
+
+Current Linux validation: the repository bootstrap fetched all five exact dependency pins and successfully applied all 15 OpenMW and nine GL4ES patches. Python 3.12.14, GCC, and CMake 4.3.4 ran all **148 host tests successfully, with no skips**. This is a fresh cloud result, separate from the earlier Mac results below. The full macOS source-validation wrapper, Xcode generation/build, signing, iPhone launch, and device behavior were not validated here. Optional WO38 GLib and local ICU adaptations were not adopted without their required Mac reproduction.
+
+A complete verified Git bundle of recovered project refs was saved outside the checkout at `/workspace/openmw-recovery-2026-10-25.bundle` (SHA-256 `8f80213c2f015c691b8d3fc02405ccf87be423dfded88d5e7039e64405049aeb`). It preserves unmerged branches and PR objects, including synthetic merge refs; it is a local recovery artifact, not a published backup. The destination already advertises all audited upstream branches and tags. No upstream branch was changed or deleted.
+
+## Executive finding (original audit)
 
 **Recommend `codex/wo33-blend-state-transition` at `49f5f0bd80e83ef87eaebd3f69c07072796738aa` as the consolidation starting point.** Its application, dependency, patch, and test contents are identical to the device-qualified correction commit `93f892dd0cf9834259b4cad2045ddb2ef9c53ed9`; the extra commit preserves the final qualification evidence. This is the strongest documented functional baseline, not a claim that all renderer or lifecycle problems are solved.
 
