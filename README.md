@@ -1,5 +1,13 @@
 # OpenMW for iOS
 
+Current recovery baseline: **WO33 `49f5f0bd80e83ef87eaebd3f69c07072796738aa`**.
+See [consolidation status](docs/consolidation-status.md), [roadmap](docs/ROADMAP.md),
+and [audit](docs/repository-audit.md) before development. Historical work orders
+do not authorize resuming WO39. Runtime code is preserved unchanged; inherited
+renderer diagnostics are forced on, so this is not a qualified performance baseline.
+Cloud host tests do not establish Xcode 27 or iPhone compatibility.
+
+
 An experimental iPhone and iPad port of OpenMW. The first milestone is a
 signed, arm64 device build that reaches the OpenMW main menu using game files
 supplied by the user.
@@ -46,11 +54,10 @@ The second command builds the third-party libraries and generates
 `build/ios/OpenMW.xcodeproj`. Open that project, select the `openmw` target,
 set your development team and bundle identifier, and run on a physical device.
 
-## GitHub Actions build
+## Historical GitHub Actions build (currently deferred)
 
 The `Build iOS` workflow performs the macOS/Xcode work remotely, matching the
-workflow used for eDukeiOS. Push this repository to GitHub and either run the
-workflow manually from the Actions tab or push to `main`/`port/**`.
+workflow used for eDukeiOS. The inherited workflows are retained for traceability; do not dispatch them during recovery. Local Xcode development is the current workflow.
 
 Each successful run produces:
 

@@ -2,7 +2,50 @@
 
 Audit date: 2026-10-24. See [repository-audit.md](repository-audit.md) for evidence levels, access limitations, and test results.
 
-## Inventory boundary
+## Live cloud refresh — 2026-10-25
+
+This section supersedes the historical access limitations below. All **29 upstream heads and three tags match** the audited table exactly, including recomputed B-only/H-only counts. All advertised refs were fetched successfully. There are now **22 advertised PR heads and 22 merge refs**, not 21. Git refs do not establish PR open/closed state, draft status, reviews, checks, or fork ownership. Paginated API verification remains blocked by proxy CONNECT HTTP 403 for `api.github.com`.
+
+Upstream: `https://github.com/arjunyerevan95-dot/OpenMWiOS.git`.
+Fork destination: `https://github.com/DivaythFyr1/OpenMWiOS.git`.
+The destination has all 29 audited branch names and three tags; its main advanced to `3e86accde6b3bc01b9f6475ad85dbed746db21bc`, adding the four audit/roadmap documents. Upstream main remains `ed23e9c9be44893fead05c6b65f8915a6a7b53b2`. No WO39 implementation branch is advertised.
+
+Exact dated advertisements are retained in [upstream refs](recovery/upstream-refs-2026-10-25.tsv) and [destination refs](recovery/origin-refs-2026-10-25.tsv). The tables below retain the historical audit as provenance.
+
+### Complete live PR Git inventory
+
+The base column is the **first parent of GitHub's advertised synthetic merge commit**, not a fresh API assertion of the current PR base branch. The merge's second parent was checked against each advertised head. Base/head repository names and current review/check status still require the API.
+
+| PR | Head SHA | Merge-ref SHA | Merge first-parent SHA |
+|---|---|---|---|
+| #1 | `845183371890a789ebcacbb02e535f89248d4f39` | `70eeefc9a0bddffb745d16d47c8669939212735d` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #2 | `399c51d4f4ede8969f29f4d5d60cca4073a1f1fb` | `0bc1a39acc8e75d8124b68c056d75b55d877756d` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #3 | `0053c50296e859e65d5b30a64a39b6427ea2c9f0` | `779d396f41a35ecc2113c9ec73d679bf721f1b2e` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #4 | `fa7d9169be3a57d7e65f57844c799b7cee1b8505` | `955474b6b5f3fea62655216a6ae43b3ce581c041` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #5 | `ce7abe11a91807eff9944d6cd1c83612f43abbb0` | `f97cddcc0b82643e378055e1e09f0a51051f5b68` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #6 | `71227ffdafc1bc3c80688d3654b09e853913617a` | `1665ec8aa73d92afd5d82e5c4c1c0ff6c148d91c` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #7 | `abdc29459c1b3d7090cef45bdf49e49916099c81` | `191895a101f3dbad7feb9c34162699269be1c839` | `03d133dae7261a2004869af89f71e6eee0961c79` |
+| #8 | `21ba9cd1f3ca1cc7388f506ded90275ec49953ab` | `0f2183b1f76a8132f7cbeb670e7f9c6488a77365` | `03d133dae7261a2004869af89f71e6eee0961c79` |
+| #9 | `6855180e17846646f677446a84e888f1b5c896ab` | `5882f85ccb26cecca6f29327f31598f7b27eaba6` | `21ba9cd1f3ca1cc7388f506ded90275ec49953ab` |
+| #10 | `41c07093a7eaa95aea6f64c84674498af23056a5` | `fdb51668132739e4fb5647bab120406873efde80` | `6855180e17846646f677446a84e888f1b5c896ab` |
+| #11 | `d03d15451f8fc399cbb813c35c845754d9ce500e` | `984b239c63a1bf876672e6cee620c6100c28c08d` | `41c07093a7eaa95aea6f64c84674498af23056a5` |
+| #12 | `cf1d2fd1521bc4465709a56f1a387637d474b56f` | `0fc1eb866879435cf2ecb597335bef2bf643acba` | `d03d15451f8fc399cbb813c35c845754d9ce500e` |
+| #13 | `5c60db4c4f1ca5c135a0bea754496b7a2f1af3f1` | `6d8883151e28e9f6a0f68a0042973f49a2e1de61` | `cf1d2fd1521bc4465709a56f1a387637d474b56f` |
+| #14 | `6db1c2af5066f810df97c5af39bdbf2a48fb86b5` | `57bdc859dedbe1e739fa24d6e9d5da8c872beaf6` | `5c60db4c4f1ca5c135a0bea754496b7a2f1af3f1` |
+| #15 | `1dc819cea447f8ac40c878e1a6d7f4d478e94063` | `fcb02b6eff174ae6e04b169b5dcbb5dc3b17b89f` | `6db1c2af5066f810df97c5af39bdbf2a48fb86b5` |
+| #16 | `6001b1f39dcfb94f594d3d1a80d2b801749c8a26` | `d587cc7420593c99fdb84b46e788eeb8677e69dc` | `1dc819cea447f8ac40c878e1a6d7f4d478e94063` |
+| #17 | `123ae04675dda763158fa7332e8f36d64b88105d` | `42a94f8a1fa90106db27a411b461f97c95493421` | `6001b1f39dcfb94f594d3d1a80d2b801749c8a26` |
+| #18 | `164abe4ba2becf46ea043811963ac28195d29bcd` | `b28161fa26800ce2377e9a75299d9a0475f829bc` | `123ae04675dda763158fa7332e8f36d64b88105d` |
+| #19 | `49f5f0bd80e83ef87eaebd3f69c07072796738aa` | `5aebaf7923488753e804b4c200c07e167e67d460` | `164abe4ba2becf46ea043811963ac28195d29bcd` |
+| #20 | `c82542b5daa8f70764818d0058ad47e1f541efa9` | `84fea70809a7b572dd011ac7fc7f0584a1652d9f` | `49f5f0bd80e83ef87eaebd3f69c07072796738aa` |
+| #21 | `b83c65ac0f39aa6d8cadf534e14114c2fcf12b45` | `b93d6d9be3e15bf5e00df5073ff4d75b60d3fc70` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+| #22 | `5ecc3ea28bdc0bb1026acb18171339cd0825ad68` | `3230f4add79bc863fc1a37f5477a52f35659bce4` | `ed23e9c9be44893fead05c6b65f8915a6a7b53b2` |
+
+PR #21 is now recovered at `b83c65ac0f39aa6d8cadf534e14114c2fcf12b45`; its full object history is preserved. Its mod archive remains excluded and its payload has not been qualified.
+
+**New PR #22:** head `5ecc3ea28bdc0bb1026acb18171339cd0825ad68`. Relative to upstream main it adds two workflow files: a generic simulator workflow and a Gradle workflow cloning `https://gitlab.com/duron27/openmw_ios.git` without a commit pin. It adds no WO33 application correction or qualification evidence. Excluded: CI and simulator work are deferred, and these workflows do not establish this port's build provenance. This addition does not change the WO33 recommendation.
+
+## Historical inventory boundary
 
 The non-shallow adjacent checkout contains **29 remote-tracking branch heads, three tags, and 203 reachable commits**. All cached heads were compared with the recommended baseline using their Git objects. The public PR index lists **21 open PRs, zero closed**. Direct Git/API access failed, so live-remote completeness, current review states, and inaccessible PR conversations remain unverified. This table is a recovery inventory of the available snapshot, not a claim that a fresh remote fetch succeeded.
 
