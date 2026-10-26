@@ -79,3 +79,20 @@ class SceneLifecycleTests(unittest.TestCase):
         port = (ROOT / 'ports/sdl2/portfile.cmake').read_text()
         self.assertIn('ios-scene-lifecycle.patch', port)
         self.assertIn('--overlay-ports="${ROOT_DIR}/ports"', (ROOT / 'scripts/build-ios.sh').read_text())
+
+    def test_icu_cross_configure_is_scoped_to_ios(self):
+        import json
+        original = ROOT / 'deps/vcpkg-pinned/ports/icu'
+        overlay = ROOT / 'ports/icu'
+        self.assertEqual(json.loads((overlay / 'vcpkg.json').read_text()),
+                         json.loads((original / 'vcpkg.json').read_text()))
+        extra = (overlay / 'portfile.cmake').read_text().split(
+            'if(VCPKG_TARGET_IS_IOS)\n'
+            '    vcpkg_list(APPEND CONFIGURE_OPTIONS cross_compiling=yes)\n'
+            'endif()\n')
+        self.assertEqual(len(extra), 2)
+        self.assertIn('vcpkg_list(SET CONFIGURE_OPTIONS)', extra[0])
+        self.assertIn('--with-cross-build=', extra[1])
+        for name in ('disable-static-prefix.patch', 'vcpkg-cross-data.patch',
+                     'mh-darwin.patch'):
+            self.assertEqual((overlay / name).read_bytes(), (original / name).read_bytes())

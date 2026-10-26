@@ -60,6 +60,15 @@ migration or dependency version change is required.
   preserving version 2.32.10#1, archive SHA-512, features and existing patches.
   The added patch changes the port ABI/cache key; verify the build actually
   rebuilds SDL rather than using an independently installed legacy archive.
+- `ports/icu/` retains pinned ICU 78.3#1 and its upstream patches/checksum. The
+  iOS-only port option passes `cross_compiling=yes` to Autoconf. On the reported
+  Apple Silicon/Xcode 27.1 run, ICU linked an iPhoneOS `conftest` but attempted
+  to execute it on macOS because both `--build` and `--host` were
+  `aarch64-apple-darwin`. `config.log` records `Killed: 9` and
+  `cannot run C compiled programs` (configure exit 77). The existing host-tool
+  build remains selected with `--with-cross-build`. The new option avoids that
+  invalid execution attempt; successful ICU configuration/build still needs a
+  fresh Mac retry. No ICU version or global triplet setting changes.
 
 No generated project is edited. OpenMW gameplay, GL4ES, touch controls, dependency
 versions, and the iOS 16.3 deployment minimum are unchanged. This is a local
@@ -67,7 +76,7 @@ adaptation, not a claim that upstream SDL provides this implementation.
 
 ## Cloud validation
 
-153 host tests pass (148 inherited plus five lifecycle tests), Python 3.12.14,
+154 host tests pass (148 inherited plus six focused lifecycle/build tests), Python 3.12.14,
 GCC and CMake 4.3.4. New tests replay the patch, generate/parse the plist with
 CMake, check single active-scene startup, SDL window ownership, notification
 routing and overlay/version wiring. They are source contracts, not an Objective-C
@@ -96,9 +105,13 @@ qualification can be claimed from this Linux host.
 2. Run `./scripts/bootstrap.sh`, `./scripts/validate-source.sh`, and
    `CONFIGURATION=Debug ./scripts/build-ios.sh`. Confirm vcpkg selects the local
    SDL port and builds its patched UIKit sources. This generates the project;
-   it is not the final app compile. Preserve full configure/build logs. Any
-   cold OSG/ICU failure remains a separate build prerequisite; do not silently
-   incorporate unqualified workarounds.
+   it is not the final app compile. Preserve full configure/build logs. A cold
+   OSG failure remains a separate build prerequisite; do not silently
+   incorporate an unqualified workaround.
+   On the reported Apple Silicon machine, confirm the ICU configure command
+   contains `cross_compiling=yes` and completes before continuing. If it still
+   fails, retain ICU's `config.log` and the configure out/err logs; do not
+   advance dependency pins to work around an unidentified failure.
 3. Open build/ios/OpenMW.xcodeproj. Select openmw, Debug and the physical iPhone.
    Select a local Personal Team and unique bundle identifier (free signing is
    sufficient). Keep these choices local and do not commit generated projects.
