@@ -1,5 +1,13 @@
 # Phase 1 — Repository recovery and audit
 
+Historical Phase 1 record. The WO33 consolidation was merged in
+[PR #1](https://github.com/DivaythFyr1/OpenMWiOS/pull/1) at
+`31db72918ece9003e3be9bfc410029546a846f1a`. The current iOS 27 scene
+candidate is in Draft [PR #2](https://github.com/DivaythFyr1/OpenMWiOS/pull/2);
+its [handoff](ios27-lifecycle.md) lists the remaining Xcode/device checks.
+Statements below about blocked API access and pending consolidation describe
+the original audit dates.
+
 Audit date: 2026-10-24. Scope: Phase 1 of [ROADMAP.md](ROADMAP.md) only.
 
 ## Cloud recovery update — 2026-10-25

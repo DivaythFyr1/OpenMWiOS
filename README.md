@@ -1,12 +1,15 @@
 # OpenMW for iOS
 
-Current recovery baseline: **WO33 `49f5f0bd80e83ef87eaebd3f69c07072796738aa`**.
-See [consolidation status](docs/consolidation-status.md), [roadmap](docs/ROADMAP.md),
-and [audit](docs/repository-audit.md) before development. Historical work orders
-do not authorize resuming WO39. Runtime code is preserved unchanged; inherited
-renderer diagnostics are forced on, so this is not a qualified performance baseline.
-Cloud host tests do not establish Xcode 27 or iPhone compatibility.
-
+The merged development baseline is WO33 (`49f5f0bd80e83ef87eaebd3f69c07072796738aa`).
+Draft [PR #2](https://github.com/DivaythFyr1/OpenMWiOS/pull/2) proposes the iOS 27
+scene lifecycle migration. Its [handoff](docs/ios27-lifecycle.md) contains the
+Xcode Run, LLDB and physical-iPhone test procedure; launch and resume remain
+unverified. The [consolidation record](docs/consolidation-status.md),
+[roadmap](docs/ROADMAP.md) and [audit](docs/repository-audit.md) document the
+earlier recovery. The [historical handoff index](docs/historical-handoffs.md) summarizes earlier
+work orders; they do not authorize resuming WO39.
+Inherited renderer diagnostics are forced on, so this is not a qualified
+performance baseline.
 
 An experimental iPhone and iPad port of OpenMW. The first milestone is a
 signed, arm64 device build that reaches the OpenMW main menu using game files
