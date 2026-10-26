@@ -119,7 +119,9 @@ extern "C" void openmw_ios_prepare_environment(void)
         std::filesystem::create_directories(root);
         std::filesystem::create_directories(data);
         std::filesystem::create_directories(library / "OpenMW");
-        setenv("OPENMW_IOS_RENDERER_DIAGNOSTICS", "1", 1);
+        openmw_ios_log("renderer_diagnostics_config", openmw_ios_renderer_diag_enabled()
+            ? "enabled=1;source=environment;restart_required=1"
+            : "enabled=0;source=environment;restart_required=1");
         openmw_ios_renderer_diag_begin();
         openmw_ios_renderer_diag_record(
             "handshake", "openmw", "bridge-ready", "bootstrap-after-documents-resolution");

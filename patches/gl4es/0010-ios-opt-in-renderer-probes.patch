@@ -1,0 +1,180 @@
+diff --git a/src/gl/enable.c b/src/gl/enable.c
+--- a/src/gl/enable.c
++++ b/src/gl/enable.c
+@@ -121,14 +121,16 @@
+                     glstate->fpe_state->blend_enable = enable;
+                 } else next(cap);
+             }
+-            char wo33_detail[384];
+-            snprintf(wo33_detail, sizeof(wo33_detail),
+-                "requested=%d;previous=%d;current=%d;changed=%d;glstate=%p;active_list=%p;list_pending=%d;fpe_state=%p;shaderblend=%d;native_forwarded=%d",
+-                enable ? 1 : 0, previous ? 1 : 0, glstate->enable.blend ? 1 : 0, changed,
+-                (void*)glstate, (void*)glstate->list.active, glstate->list.pending,
+-                (void*)glstate->fpe_state, globals4es.shaderblend,
+-                changed && !(glstate->fpe_state && globals4es.shaderblend));
+-            wo33_diag_blend_event("proxy_glEnable(GL_BLEND)", wo33_detail);
++            if (wo31_diag_enabled()) {
++                char wo33_detail[384];
++                snprintf(wo33_detail, sizeof(wo33_detail),
++                    "requested=%d;previous=%d;current=%d;changed=%d;glstate=%p;active_list=%p;list_pending=%d;fpe_state=%p;shaderblend=%d;native_forwarded=%d",
++                    enable ? 1 : 0, previous ? 1 : 0, glstate->enable.blend ? 1 : 0, changed,
++                    (void*)glstate, (void*)glstate->list.active, glstate->list.pending,
++                    (void*)glstate->fpe_state, globals4es.shaderblend,
++                    changed && !(glstate->fpe_state && globals4es.shaderblend));
++                wo33_diag_blend_event("proxy_glEnable(GL_BLEND)", wo33_detail);
++            }
+             break;
+         }
+         proxy_GO(GL_CULL_FACE, cull_face);
+diff --git a/src/gl/drawing.c b/src/gl/drawing.c
+--- a/src/gl/drawing.c
++++ b/src/gl/drawing.c
+@@ -285,6 +285,7 @@
+     return len+1;  // lenght is max(indices) + 1 !
+ }
+ static int wo33_smoke_target_bound(void) {
++    if (!wo31_diag_enabled()) return 0;
+     for (int unit = 0; unit < hardext.maxtex; ++unit) {
+         gltexture_t* texture = glstate->texture.bound[unit][ENABLED_TEX2D];
+         if (texture && wo32_diag_texture_target_for_name(texture->texture) == 2)
+@@ -445,41 +446,43 @@
+                 ToBuffer(glstate->vao->first, glstate->vao->count);
+         }
+ 
+-        program_t* wo31_program = glstate->glsl ? glstate->glsl->glprogram : NULL;
+-        for (int wo31_unit = 0; wo31_unit < hardext.maxtex; ++wo31_unit)
+-        {
+-            gltexture_t* wo31_texture = glstate->texture.bound[wo31_unit][ENABLED_TEX2D];
+-            const int wo31_category
+-                = wo31_texture ? wo31_diag_texture_category_for_name(wo31_texture->texture) : 0;
+-            const int wo32_target
+-                = wo31_texture ? wo32_diag_texture_target_for_name(wo31_texture->texture) : 0;
+-            if (wo32_target)
++        if (wo31_diag_enabled()) {
++            program_t* wo31_program = glstate->glsl ? glstate->glsl->glprogram : NULL;
++            for (int wo31_unit = 0; wo31_unit < hardext.maxtex; ++wo31_unit)
+             {
+-                const char* wo32_fragment_source
+-                    = wo31_program && wo31_program->last_frag ? wo31_program->last_frag->source : NULL;
+-                wo31_diag_draw(wo31_program ? wo31_program->id : 0, wo31_texture->texture,
+-                    wo31_category, wo32_target,
+-                    glstate->enable.blend, glstate->blendsfactorrgb, glstate->blenddfactorrgb,
+-                    glstate->blendsfactoralpha, glstate->blenddfactoralpha, glstate->enable.alpha_test,
+-                    glstate->alphafunc, glstate->alpharef, glstate->enable.depth_test, glstate->depth.mask,
+-                    glstate->depth.func, glstate->enable.fog, glstate->fog.start, glstate->fog.end,
+-                    glstate->fog.color, wo31_program ? wo31_program->has_fpe : 0,
+-                    wo31_program ? wo31_program->default_fragment : 0,
+-                    wo32_fragment_source && strstr(wo32_fragment_source, "discard"),
+-                    wo32_fragment_source && (strstr(wo32_fragment_source, "gl_FragColor.a")
+-                        || strstr(wo32_fragment_source, ".a =")), count);
+-                break;
+-            }
+-        }
+-        wo31_diag_fog_applied(wo31_program ? wo31_program->id : 0,
+-            wo31_program ? wo31_program->builtin_fog.has : 0,
+-            wo31_program ? wo31_program->builtin_fog.start : -1,
+-            wo31_program ? wo31_program->builtin_fog.end : -1,
+-            wo31_program ? wo31_program->builtin_fog.scale : -1,
+-            wo31_program ? wo31_program->builtin_fog.color : -1,
+-            wo31_program ? wo31_program->has_fpe : 0,
+-            wo31_program ? wo31_program->default_fragment : 0,
+-            glstate->fog.start, glstate->fog.end, glstate->fog.color);
++                gltexture_t* wo31_texture = glstate->texture.bound[wo31_unit][ENABLED_TEX2D];
++                const int wo31_category
++                    = wo31_texture ? wo31_diag_texture_category_for_name(wo31_texture->texture) : 0;
++                const int wo32_target
++                    = wo31_texture ? wo32_diag_texture_target_for_name(wo31_texture->texture) : 0;
++                if (wo32_target)
++                {
++                    const char* wo32_fragment_source
++                        = wo31_program && wo31_program->last_frag ? wo31_program->last_frag->source : NULL;
++                    wo31_diag_draw(wo31_program ? wo31_program->id : 0, wo31_texture->texture,
++                        wo31_category, wo32_target,
++                        glstate->enable.blend, glstate->blendsfactorrgb, glstate->blenddfactorrgb,
++                        glstate->blendsfactoralpha, glstate->blenddfactoralpha, glstate->enable.alpha_test,
++                        glstate->alphafunc, glstate->alpharef, glstate->enable.depth_test, glstate->depth.mask,
++                        glstate->depth.func, glstate->enable.fog, glstate->fog.start, glstate->fog.end,
++                        glstate->fog.color, wo31_program ? wo31_program->has_fpe : 0,
++                        wo31_program ? wo31_program->default_fragment : 0,
++                        wo32_fragment_source && strstr(wo32_fragment_source, "discard"),
++                        wo32_fragment_source && (strstr(wo32_fragment_source, "gl_FragColor.a")
++                            || strstr(wo32_fragment_source, ".a =")), count);
++                    break;
++                }
++            }
++            wo31_diag_fog_applied(wo31_program ? wo31_program->id : 0,
++                wo31_program ? wo31_program->builtin_fog.has : 0,
++                wo31_program ? wo31_program->builtin_fog.start : -1,
++                wo31_program ? wo31_program->builtin_fog.end : -1,
++                wo31_program ? wo31_program->builtin_fog.scale : -1,
++                wo31_program ? wo31_program->builtin_fog.color : -1,
++                wo31_program ? wo31_program->has_fpe : 0,
++                wo31_program ? wo31_program->default_fragment : 0,
++                glstate->fog.start, glstate->fog.end, glstate->fog.color);
++        }
+         // POLYGON mode as LINE is "intercepted" and drawn using list
+         if(instancecount==1 || hardext.esversion==1) {
+             if(!iindices && !sindices)
+diff --git a/src/gl/listdraw.c b/src/gl/listdraw.c
+--- a/src/gl/listdraw.c
++++ b/src/gl/listdraw.c
+@@ -15,6 +15,7 @@
+ 
+ static int wo33_smoke_target_bound(void)
+ {
++    if (!wo31_diag_enabled()) return 0;
+     for (int unit = 0; unit < hardext.maxtex; ++unit)
+     {
+         gltexture_t* texture = glstate->texture.bound[unit][ENABLED_TEX2D];
+diff --git a/src/gl/ios_renderer_diag.h b/src/gl/ios_renderer_diag.h
+--- a/src/gl/ios_renderer_diag.h
++++ b/src/gl/ios_renderer_diag.h
+@@ -4,6 +4,7 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
++int wo31_diag_enabled(void);
+ void wo31_diag_handshake(const char* entry);
+ void wo31_diag_texture_upload(unsigned int texture, const void* data, size_t size, unsigned int format,
+     int width, int height, int alpha, int simple_alpha, int complex_alpha);
+diff --git a/src/gl/ios_renderer_diag.c b/src/gl/ios_renderer_diag.c
+--- a/src/gl/ios_renderer_diag.c
++++ b/src/gl/ios_renderer_diag.c
+@@ -55,6 +55,11 @@
+ #else
+     return 0;
+ #endif
++}
++
++int wo31_diag_enabled(void)
++{
++    return available_core();
+ }
+ 
+ static int available_texture(void)
+@@ -112,6 +117,7 @@
+ 
+ int wo31_diag_texture_category_for_name(unsigned int texture)
+ {
++    if (!available_core()) return 0;
+ #if defined(__APPLE__) || defined(WO31_DIAGNOSTIC_TEST_BRIDGE)
+     if (available_core() && openmw_ios_renderer_diag_texture_category_for_gl_name)
+     {
+diff --git a/src/gl/shader.c b/src/gl/shader.c
+--- a/src/gl/shader.c
++++ b/src/gl/shader.c
+@@ -1,4 +1,5 @@
+ #include "shader.h"
++#include "ios_renderer_diag.h"
+ 
+ #include "../glx/hardext.h"
+ #include "debug.h"
+@@ -130,7 +131,7 @@
+         errorGL();
+         int *wo17_logged = glshader->type==GL_VERTEX_SHADER
+             ? &wo17_debug_vertex_logged : &wo17_debug_fragment_logged;
+-        if(!*wo17_logged && glshader->source && glshader->converted
++        if(wo31_diag_enabled() && !*wo17_logged && glshader->source && glshader->converted
+                 && strstr(glshader->source, "uniform bool useAdvancedShader")) {
+             LOAD_GLES2(glGetShaderiv);
+             LOAD_GLES2(glGetShaderInfoLog);

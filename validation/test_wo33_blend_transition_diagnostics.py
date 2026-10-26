@@ -31,10 +31,10 @@ OSG_PINNED_PATCH_INPUTS_SHA256 = (
     "91f3e31c4bd6999162f91c0ed1acdebfe889902d7e79d16cecf505392020409e"
 )
 OSG_PATCHED_FILE_SHA256 = {
-    "include/osg/State": "378cb51658ba82278f8889f5e730ce114ac7b2ce30715dc499b0b2cabb17848b",
+    "include/osg/State": "100965390024dc757b18a1b242efe79471dc998f25eb67512fb7c1a5a3f0d5e8",
     "src/osg/GLExtensions.cpp": "47cbf5fe3c077e92dca7b2dbfec1c8f3bafe1d43ec5cc1837aee4ceeab6dfee1",
-    "src/osg/BlendFunc.cpp": "4d79247a631be73f7c859cd6038ff3199ef5f0ef4a2fd0bfaffa7f80b7f8b7e8",
-    "src/osg/Texture2D.cpp": "678460b5e6b097b26cccab1d7f478d9de3b27eb3edf6bae01c770c1dff495229",
+    "src/osg/BlendFunc.cpp": "bc883586fb7d05c27d72aac1e28854dcd7cdd385e861cfce97a6bb2a10a3a853",
+    "src/osg/Texture2D.cpp": "d8c52cbbad9b2f58bb99b1e2f3aa7a0a94bc4dab0315f3e3e1289fed84b0ee73",
 }
 
 
@@ -207,7 +207,7 @@ class WorkOrder33BlendTransitionDiagnosticTests(unittest.TestCase):
         )
         patches = sorted((ROOT / "patches" / "gl4es").glob("*.patch"))
         self.assertEqual(
-            [f"{index:04d}" for index in range(1, 10)],
+            [f"{index:04d}" for index in range(1, 11)],
             [patch.name.split("-", 1)[0] for patch in patches],
         )
         with tempfile.TemporaryDirectory() as directory:

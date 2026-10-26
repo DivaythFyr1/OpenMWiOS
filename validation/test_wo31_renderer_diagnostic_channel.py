@@ -118,8 +118,8 @@ class WorkOrder31RendererDiagnosticChannelTests(unittest.TestCase):
 
     def test_channel_is_explicitly_gated_and_defaults_disabled(self) -> None:
         self.assertIn('std::getenv("OPENMW_IOS_RENDERER_DIAGNOSTICS")', self.bridge)
-        self.assertIn('enabled && std::string(enabled) == "1"', self.bridge)
-        self.assertIn('setenv("OPENMW_IOS_RENDERER_DIAGNOSTICS", "1", 1)', self.bootstrap)
+        self.assertIn("value && value[0] == '1'", self.bridge)
+        self.assertNotIn('setenv("OPENMW_IOS_RENDERER_DIAGNOSTICS"', self.bootstrap)
         self.assertNotRegex(self.bridge, r"sEnabled\s*=\s*true")
 
     def test_schema_supports_session_sample_family_source_and_correlation(self) -> None:

@@ -1,0 +1,49 @@
+diff --git a/apps/openmw/mwrender/pingpongcanvas.cpp b/apps/openmw/mwrender/pingpongcanvas.cpp
+--- a/apps/openmw/mwrender/pingpongcanvas.cpp
++++ b/apps/openmw/mwrender/pingpongcanvas.cpp
+@@ -1,6 +1,9 @@
+ #include "pingpongcanvas.hpp"
+ 
+ #include <cassert>
++#ifdef OPENMW_IOS
++#include <ios/openmw_ios_renderer_diagnostics.h>
++#endif
+ 
+ #include <components/debug/debuglog.hpp>
+ #include <components/shader/shadermanager.hpp>
+@@ -17,6 +20,11 @@
+     {
+         void logBoundedSceneReadback(osg::State& state)
+         {
++#ifdef OPENMW_IOS
++            if (!openmw_ios_renderer_diag_enabled()) return;
++#else
++            return;
++#endif
+             static std::size_t nextSample = 0;
+             constexpr std::array<unsigned int, 3> sampleFrames{ 600, 1200, 1800 };
+             if (nextSample >= sampleFrames.size() || !state.getFrameStamp()
+diff --git a/components/shader/shadermanager.cpp b/components/shader/shadermanager.cpp
+--- a/components/shader/shadermanager.cpp
++++ b/components/shader/shadermanager.cpp
+@@ -1,4 +1,7 @@
+ #include "shadermanager.hpp"
++#ifdef OPENMW_IOS
++#include <ios/openmw_ios_renderer_diagnostics.h>
++#endif
+ 
+ #include <algorithm>
+ #include <cassert>
+@@ -601,7 +604,11 @@
+ 
+             static unsigned int wo23ProgramCount = 0;
+             const std::string& fragmentName = fragmentShader->getName();
+-            if (wo23ProgramCount < 8
++#ifdef OPENMW_IOS
++            if (openmw_ios_renderer_diag_enabled() && wo23ProgramCount < 8
++#else
++            if (false && wo23ProgramCount < 8
++#endif
+                 && (fragmentName.find("objects.frag") != std::string::npos
+                     || fragmentName.find("fullscreen_tri.frag") != std::string::npos))
+             {

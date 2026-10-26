@@ -9,7 +9,20 @@ endif()
 
 file(READ "${_osg_gl_extensions}" _osg_gl_extensions_source)
 if(_osg_gl_extensions_source MATCHES "return gl4es_GetProcAddress\\(funcName\\);")
-    message(STATUS "OSG GL4ES entry-point routing patch is already applied")
+    # A routing symbol alone also matches older versions of this consolidated patch.
+    # Validate every hunk without modifying the existing source tree.
+    execute_process(
+        COMMAND /usr/bin/patch -R --dry-run -f -p1 -i "${OSG_PATCH_FILE}"
+        WORKING_DIRECTORY "${OSG_SOURCE_DIR}"
+        RESULT_VARIABLE _osg_reverse_check
+        OUTPUT_QUIET ERROR_QUIET
+    )
+    if(NOT _osg_reverse_check EQUAL 0)
+        message(FATAL_ERROR
+            "OSG contains an older or locally modified GL4ES patch. Preserve the existing "
+            "build/ios directory and configure a fresh build tree to apply the current patch.")
+    endif()
+    message(STATUS "Current OSG GL4ES patch is already applied")
     return()
 endif()
 
