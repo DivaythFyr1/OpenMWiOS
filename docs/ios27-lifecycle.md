@@ -1,6 +1,8 @@
 # iOS 27 scene lifecycle migration
 
-Status: implementation candidate; physical-device acceptance is outstanding.
+Status: user-confirmed Xcode build and iOS 27 physical-device lifecycle validation;
+review/merge pending. The observations below are reported by the device owner,
+not tests performed in Codex Cloud.
 Base: merged WO33 consolidation `31db729` (main at implementation start).
 The reported startup exception has not been captured. Legacy lifecycle versus
 SDK 27 is a strong compatibility hypothesis, not a verified diagnosis of that crash.
@@ -67,8 +69,9 @@ migration or dependency version change is required.
   `aarch64-apple-darwin`. `config.log` records `Killed: 9` and
   `cannot run C compiled programs` (configure exit 77). The existing host-tool
   build remains selected with `--with-cross-build`. The new option avoids that
-  invalid execution attempt; successful ICU configuration/build still needs a
-  fresh Mac retry. No ICU version or global triplet setting changes.
+  invalid execution attempt. A subsequent Mac run generated the Xcode project
+  and compiled/launched the app; the reported CMake version was 4.4.4 rather
+  than the pinned 4.3.4. No ICU version or global triplet setting changes.
 
 No generated project is edited. OpenMW gameplay, GL4ES, touch controls, dependency
 versions, and the iOS 16.3 deployment minimum are unchanged. This is a local
@@ -94,6 +97,20 @@ and Ruby are unavailable here; ShellCheck and the wrapper's plist/YAML checks
 are not passed checks. The new plist-generation test passes independently.
 No Xcode generation, Objective-C compilation, app linking, launch or visual
 qualification can be claimed from this Linux host.
+
+## Physical-device result reported by the user
+
+The user reports a successful Xcode build and launch on a physical iPhone
+running iOS 27, followed by repeated cold launches, background/resume cycles,
+touch controls after interruptions, loading saved games, entering exterior
+areas, and returning to the main menu. These results satisfy the requested
+device lifecycle scenarios for review. The user observed lower performance
+than before the port; no performance measurements or renderer changes are part
+of this PR. An initial black-screen observation was followed by a successful
+launch; its exact cause was not captured. The original startup exception and
+its stack were also not captured, so the historical crash's root cause remains
+unproven. No scene-disconnect/reconnect, detailed drawable-identity or
+long-duration stability evidence was supplied.
 
 ## Required Xcode 27 / physical iPhone procedure
 
@@ -139,11 +156,11 @@ qualification can be claimed from this Linux host.
    touches, no duplicate SDL_main, no GLES background crash or black framebuffer,
    and working audio/input after resume. Exercise scene disconnect/reconnect if
    reproducible; distinguish it from process termination followed by cold launch.
-8. Repeat cold launches and an optimized build. Record pass/fail for each item
-   and attach logs/exception evidence. Keep the PR Draft until a clean Xcode 27
-   build and physical-iPhone launch/resume validation succeed.
+8. Repeat cold launches and an optimized build when further qualification is
+   needed. Record pass/fail for each item and attach logs/exception evidence.
 
-Remaining risks: unconfirmed original root cause; UIKit API/ARC compilation not
-exercised here; SDL's existing status-bar/orientation APIs remain legacy; timing
-of suspension, scene reconnect, GLES drawable restoration and held-touch
-cancellation need device evidence. No paid Apple Developer membership is required.
+Remaining risks: unconfirmed original crash root cause; SDL's existing
+status-bar/orientation APIs remain legacy; scene reconnect, drawable restoration
+and held-touch cancellation have no separate detailed capture. The reported
+performance regression needs later measurement. No paid Apple Developer
+membership is required.
