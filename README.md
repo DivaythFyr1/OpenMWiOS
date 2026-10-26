@@ -6,7 +6,8 @@ scene lifecycle migration. Its [handoff](docs/ios27-lifecycle.md) contains the
 Xcode Run, LLDB and physical-iPhone test procedure; launch and resume remain
 unverified. The [consolidation record](docs/consolidation-status.md),
 [roadmap](docs/ROADMAP.md) and [audit](docs/repository-audit.md) document the
-earlier recovery. Historical work orders do not authorize resuming WO39.
+earlier recovery. The [historical handoff index](docs/historical-handoffs.md) summarizes earlier
+work orders; they do not authorize resuming WO39.
 Inherited renderer diagnostics are forced on, so this is not a qualified
 performance baseline.
 
