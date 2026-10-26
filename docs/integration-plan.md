@@ -1,6 +1,11 @@
 # Phase 2 proposal — Consolidate a traceable local-development baseline
 
-Status: **review branch prepared; API publication and macOS qualification outstanding** (2026-10-25). See [consolidation status](consolidation-status.md) and the live audit update. The original plan below is preserved; its statements that consolidation has not begun describe the earlier proposal, not current execution. The branch starts at exact WO33 and merges the fork's audit-only main commit, preserving both histories. Main has not been changed. No optional build adaptations or runtime changes were adopted.
+Status: **history/documentation consolidation merged** in PR #1 at
+`31db72918ece9003e3be9bfc410029546a846f1a`; clean macOS build
+qualification remains outstanding. The Phase 3 scene candidate is in Draft PR #2;
+see [its handoff](ios27-lifecycle.md). The original Phase 2 plan below is retained
+as a decision record. References to an unmerged review branch and future
+consolidation steps describe that earlier plan.
 
 ## Decision proposed
 
@@ -99,12 +104,15 @@ Likewise, retain the source patch stack initially rather than deleting diagnosti
 
 Successful launch on iOS 27 is **Phase 3's** acceptance gate. A known lifecycle launch failure does not justify concealing a Phase 2 build failure, nor should a successful build be described as a successful launch.
 
-## Concrete handoff to Phase 3, after Phase 2 review
+## Original Phase 3 handoff (superseded by the current candidate)
 
-Prepare a separate `fix/ios27-lifecycle` branch only when implementation is authorized. First capture the actual startup exception and stack, the installed executable UUID, SDK/minimum OS, built Info.plist, and whether `SDL_main` was reached. Compare the known-working original IPA's metadata if available. The existing local Debug app UUID is recorded in the audit for correlation, not assumed to match the future build.
+The authorized `fix/ios27-lifecycle` branch and Draft PR #2 now implement a
+candidate. The original startup exception and stack remain unavailable. Capture
+those, the installed executable UUID, SDK/minimum OS, built Info.plist and whether
+`SDL_main` was reached during [device validation](ios27-lifecycle.md#required-xcode-27--physical-iphone-procedure).
 
 Then evaluate the smallest maintainable scene integration at the SDL/UIKit boundary: application/scene ownership, a single intended window scene, SDL main-loop timing, foreground/background events, touch attachment, drawable/FBO handling, and GLES context lifetime. Compare a pinned SDL update or explicit patch with a narrow app integration; do not preselect SDL3 or a plist-only workaround without source and runtime evidence.
 
 Acceptance must include Xcode Run, SDL initialization, main menu, entering the world, background/resume, and absence of lifecycle crashes on the physical device. Retain GL4ES/GLES and game logic. Renderer correctness, distant fog, and view-distance optimization remain later phases, with no lowering of visual quality to mask faults.
 
-**Cloud preparation implements the history/documentation portion only. Phase 2 macOS build gates and Phase 3 device gates remain outstanding.**
+**The Phase 2 macOS build gates and Phase 3 device gates remain outstanding.**

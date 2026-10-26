@@ -1,6 +1,11 @@
 # WO33 consolidation — 2026-10-25
 
-Review branch: `audit/consolidate-baseline`. Do not merge automatically.
+Historical Phase 2 record. [PR #1](https://github.com/DivaythFyr1/OpenMWiOS/pull/1)
+was merged into `main` at `31db72918ece9003e3be9bfc410029546a846f1a`.
+Its review branch was `audit/consolidate-baseline`. The active Phase 3 handoff
+is [ios27-lifecycle.md](ios27-lifecycle.md), with a candidate in Draft PR #2.
+The statements below describe the preparation state on 2026-10-25; they are
+retained as an audit record.
 
 ## Exact inputs and disposition
 
@@ -25,11 +30,18 @@ No full `validate-source.sh` result is asserted: its macOS tooling requirements 
 
 ## Local build handoff
 
-Use a fresh Mac checkout of this review branch, not an existing edited dependency tree. Follow [integration plan step 3](integration-plan.md#step-3--define-and-verify-the-local-build-contract): select pinned CMake 4.3.4, Python 3.10+, Xcode/iPhoneOS SDK, Ninja, autotools, pkg-config and required assembler tools. Resolve the ShellCheck host architecture requirement. Run bootstrap, source validation and build-ios, then explicitly compile the generated Xcode project. Keep Personal Team and bundle ID local. The generated project is not canonical source.
+For WO33 build reproduction, use a fresh Mac checkout of merged `main`. For the
+scene candidate, check out Draft PR #2 and follow its
+[device procedure](ios27-lifecycle.md#required-xcode-27--physical-iphone-procedure).
+Select pinned CMake 4.3.4, Python 3.10+, Xcode/iPhoneOS SDK, Ninja, autotools,
+pkg-config and required assembler tools. Resolve the ShellCheck host architecture
+requirement. Run bootstrap, source validation and build-ios, then explicitly
+compile the generated Xcode project. Keep Personal Team and bundle ID local.
+The generated project is not canonical source.
 
 The previously observed Xcode 27.1 build belongs to the local audit, not this consolidated tree. Fresh clean configure/build, link/bundle checks and Debug symbol identity remain Phase 2 gates. Physical iPhone launch/resume and renderer qualification remain separate gates. Inherited diagnostics are forced on; no performance claim is made.
 
-## Publication and access
+## Publication and access (state at preparation time)
 
 Git read access, push dry-run and actual creation of remote branch `audit/consolidate-baseline` succeeded for `DivaythFyr1/OpenMWiOS`, demonstrating branch write permission. `gh pr create --draft` failed with `Post https://api.github.com/graphql: Forbidden`; no PR was created. Main remains at `3e86accde6b3bc01b9f6475ad85dbed746db21bc`. The prepared PR text is retained in [recovery/pull-request.md](recovery/pull-request.md). GitHub API requests failed at proxy CONNECT with HTTP 403, including an escalated check. Authenticated identity, formal fork relationship and paginated PR states/reviews/checks remain unverified. Git ref completeness does not establish API inventory completeness.
 
