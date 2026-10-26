@@ -40,7 +40,7 @@ diff --git a/src/gl/drawing.c b/src/gl/drawing.c
 @@ -445,41 +446,43 @@
                  ToBuffer(glstate->vao->first, glstate->vao->count);
          }
- 
+
 -        program_t* wo31_program = glstate->glsl ? glstate->glsl->glprogram : NULL;
 -        for (int wo31_unit = 0; wo31_unit < hardext.maxtex; ++wo31_unit)
 -        {
@@ -119,7 +119,7 @@ diff --git a/src/gl/listdraw.c b/src/gl/listdraw.c
 --- a/src/gl/listdraw.c
 +++ b/src/gl/listdraw.c
 @@ -15,6 +15,7 @@
- 
+
  static int wo33_smoke_target_bound(void)
  {
 +    if (!wo31_diag_enabled()) return 0;
@@ -132,7 +132,7 @@ diff --git a/src/gl/ios_renderer_diag.h b/src/gl/ios_renderer_diag.h
 @@ -4,6 +4,7 @@
  #include <stddef.h>
  #include <stdint.h>
- 
+
 +int wo31_diag_enabled(void);
  void wo31_diag_handshake(const char* entry);
  void wo31_diag_texture_upload(unsigned int texture, const void* data, size_t size, unsigned int format,
@@ -150,10 +150,10 @@ diff --git a/src/gl/ios_renderer_diag.c b/src/gl/ios_renderer_diag.c
 +{
 +    return available_core();
  }
- 
+
  static int available_texture(void)
 @@ -112,6 +117,7 @@
- 
+
  int wo31_diag_texture_category_for_name(unsigned int texture)
  {
 +    if (!available_core()) return 0;
@@ -166,7 +166,7 @@ diff --git a/src/gl/shader.c b/src/gl/shader.c
 @@ -1,4 +1,5 @@
  #include "shader.h"
 +#include "ios_renderer_diag.h"
- 
+
  #include "../glx/hardext.h"
  #include "debug.h"
 @@ -130,7 +131,7 @@

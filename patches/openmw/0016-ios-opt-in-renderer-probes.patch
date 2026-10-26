@@ -3,12 +3,12 @@ diff --git a/apps/openmw/mwrender/pingpongcanvas.cpp b/apps/openmw/mwrender/ping
 +++ b/apps/openmw/mwrender/pingpongcanvas.cpp
 @@ -1,6 +1,9 @@
  #include "pingpongcanvas.hpp"
- 
+
  #include <cassert>
 +#ifdef OPENMW_IOS
 +#include <ios/openmw_ios_renderer_diagnostics.h>
 +#endif
- 
+
  #include <components/debug/debuglog.hpp>
  #include <components/shader/shadermanager.hpp>
 @@ -17,6 +20,11 @@
@@ -31,11 +31,11 @@ diff --git a/components/shader/shadermanager.cpp b/components/shader/shadermanag
 +#ifdef OPENMW_IOS
 +#include <ios/openmw_ios_renderer_diagnostics.h>
 +#endif
- 
+
  #include <algorithm>
  #include <cassert>
 @@ -601,7 +604,11 @@
- 
+
              static unsigned int wo23ProgramCount = 0;
              const std::string& fragmentName = fragmentShader->getName();
 -            if (wo23ProgramCount < 8
