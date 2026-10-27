@@ -165,8 +165,7 @@ namespace
         if (sStarted)
             return;
         sStarted = true;
-        const char* enabled = std::getenv("OPENMW_IOS_RENDERER_DIAGNOSTICS");
-        sEnabled = enabled && std::string(enabled) == "1";
+        sEnabled = openmw_ios_renderer_diag_enabled() != 0;
         if (!sEnabled)
             return;
 
@@ -193,6 +192,8 @@ namespace
 
 extern "C" void openmw_ios_renderer_diag_begin(void)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return;
     @autoreleasepool
     {
         std::lock_guard<std::mutex> lock(sMutex);
@@ -202,14 +203,19 @@ extern "C" void openmw_ios_renderer_diag_begin(void)
 
 extern "C" int openmw_ios_renderer_diag_enabled(void)
 {
-    std::lock_guard<std::mutex> lock(sMutex);
-    beginLocked();
-    return sEnabled ? 1 : 0;
+    // Process-lifetime configuration; no mutex or environment lookup per draw.
+    static const bool enabled = [] {
+        const char* value = std::getenv("OPENMW_IOS_RENDERER_DIAGNOSTICS");
+        return value && value[0] == '1' && value[1] == '\0';
+    }();
+    return enabled ? 1 : 0;
 }
 
 extern "C" uint32_t openmw_ios_renderer_diag_record(
     const char* family, const char* source, const char* correlation, const char* detail)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     @autoreleasepool
     {
         std::lock_guard<std::mutex> lock(sMutex);
@@ -258,6 +264,8 @@ extern "C" uint32_t openmw_ios_renderer_diag_record(
 extern "C" void openmw_ios_renderer_diag_register_texture(
     uint64_t hash, int category, const char* identity, const char* detail)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return;
     {
         std::lock_guard<std::mutex> lock(sMutex);
         beginLocked();
@@ -275,6 +283,8 @@ extern "C" void openmw_ios_renderer_diag_register_texture(
 
 extern "C" int openmw_ios_renderer_diag_texture_category(uint64_t hash)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     std::lock_guard<std::mutex> lock(sMutex);
     beginLocked();
     const auto found = sTextureCategories.find(hash);
@@ -284,6 +294,8 @@ extern "C" int openmw_ios_renderer_diag_texture_category(uint64_t hash)
 extern "C" void openmw_ios_renderer_diag_register_gl_texture(
     unsigned int texture, uint64_t hash, int category, const char* identity, const char* detail)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return;
     int target = OPENMW_IOS_RENDERER_TARGET_NONE;
     bool firstArm = false;
     {
@@ -319,6 +331,8 @@ extern "C" void openmw_ios_renderer_diag_register_gl_texture(
 
 extern "C" int openmw_ios_renderer_diag_texture_category_for_gl_name(unsigned int texture)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     std::lock_guard<std::mutex> lock(sMutex);
     beginLocked();
     const auto found = sGLTextureCategories.find(texture);
@@ -327,6 +341,8 @@ extern "C" int openmw_ios_renderer_diag_texture_category_for_gl_name(unsigned in
 
 extern "C" int openmw_ios_renderer_diag_target_for_hash(uint64_t hash)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     std::lock_guard<std::mutex> lock(sMutex);
     beginLocked();
     const auto found = sTextureTargets.find(hash);
@@ -335,6 +351,8 @@ extern "C" int openmw_ios_renderer_diag_target_for_hash(uint64_t hash)
 
 extern "C" int openmw_ios_renderer_diag_target_for_gl_name(unsigned int texture)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     std::lock_guard<std::mutex> lock(sMutex);
     beginLocked();
     const auto found = sGLTextureTargets.find(texture);
@@ -344,6 +362,8 @@ extern "C" int openmw_ios_renderer_diag_target_for_gl_name(unsigned int texture)
 extern "C" void openmw_ios_renderer_diag_blend_event(
     const char* source, const char* site, const char* detail)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return;
     const unsigned long long thread
         = static_cast<unsigned long long>(std::hash<std::thread::id>{}(std::this_thread::get_id()));
     const std::string safeSite = site ? site : "unknown";
@@ -385,6 +405,8 @@ extern "C" void openmw_ios_renderer_diag_blend_event(
 extern "C" void openmw_ios_renderer_diag_arm_exterior_fog(
     float start, float end, const float* color, float view_distance)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return;
     if (!color)
         return;
     unsigned int generation = 0;
@@ -418,6 +440,8 @@ extern "C" void openmw_ios_renderer_diag_arm_exterior_fog(
 extern "C" unsigned int openmw_ios_renderer_diag_matching_exterior_fog_generation(
     float start, float end, const float* color)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     if (!color)
         return 0;
     std::lock_guard<std::mutex> lock(sMutex);
@@ -433,6 +457,8 @@ extern "C" unsigned int openmw_ios_renderer_diag_matching_exterior_fog_generatio
 
 extern "C" uint64_t openmw_ios_renderer_diag_hash(const void* data, size_t size)
 {
+    if (!openmw_ios_renderer_diag_enabled())
+        return 0;
     if (!data || size == 0)
         return 0;
     const unsigned char* bytes = static_cast<const unsigned char*>(data);

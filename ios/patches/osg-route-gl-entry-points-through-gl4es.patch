@@ -2,7 +2,7 @@ diff --git a/include/osg/State b/include/osg/State
 index b74fcbb5b..4293e1627 100644
 --- a/include/osg/State
 +++ b/include/osg/State
-@@ -38,6 +38,14 @@
+@@ -38,6 +38,15 @@
  #include <set>
  #include <string>
  
@@ -10,6 +10,7 @@ index b74fcbb5b..4293e1627 100644
 +#include <cstdio>
 +extern "C" void gl4es_glEnable(GLenum cap);
 +extern "C" void gl4es_glDisable(GLenum cap);
++extern "C" int openmw_ios_renderer_diag_enabled(void) __attribute__((weak_import));
 +extern "C" void openmw_ios_renderer_diag_blend_event(
 +    const char*, const char*, const char*) __attribute__((weak_import));
 +#endif
@@ -17,14 +18,15 @@ index b74fcbb5b..4293e1627 100644
  #ifndef GL_TEXTURE0
  #define GL_TEXTURE0 0x84C0
  #endif
-@@ -1142,12 +1150,39 @@ class OSG_EXPORT State : public Referenced
+@@ -1142,12 +1151,40 @@ class OSG_EXPORT State : public Referenced
          */
          inline bool applyMode(StateAttribute::GLMode mode,bool enabled,ModeStack& ms)
          {
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
 +            const bool manualBlendCacheMatch =
 +                mode == GL_BLEND && ms.valid && ms.last_applied_value == enabled;
-+            if (mode == GL_BLEND && openmw_ios_renderer_diag_blend_event)
++            if (mode == GL_BLEND && openmw_ios_renderer_diag_blend_event
++                && openmw_ios_renderer_diag_enabled && openmw_ios_renderer_diag_enabled())
 +            {
 +                char detail[256];
 +                std::snprintf(detail, sizeof(detail),
@@ -57,12 +59,13 @@ index b74fcbb5b..4293e1627 100644
  
                  if (_checkGLErrors==ONCE_PER_ATTRIBUTE) checkGLErrors(mode);
  
-@@ -1163,10 +1189,27 @@ class OSG_EXPORT State : public Referenced
+@@ -1163,10 +1200,28 @@ class OSG_EXPORT State : public Referenced
              {
                  if (setActiveTextureUnit(unit))
                  {
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
-+                    if (mode == GL_BLEND && openmw_ios_renderer_diag_blend_event)
++                    if (mode == GL_BLEND && openmw_ios_renderer_diag_blend_event
++                        && openmw_ios_renderer_diag_enabled && openmw_ios_renderer_diag_enabled())
 +                    {
 +                        char detail[256];
 +                        std::snprintf(detail, sizeof(detail),
@@ -89,7 +92,7 @@ diff --git a/src/osg/BlendFunc.cpp b/src/osg/BlendFunc.cpp
 index b22788c50..cce674672 100644
 --- a/src/osg/BlendFunc.cpp
 +++ b/src/osg/BlendFunc.cpp
-@@ -14,6 +14,13 @@
+@@ -14,6 +14,14 @@
  #include <osg/GLExtensions>
  #include <osg/State>
  #include <osg/Notify>
@@ -97,18 +100,20 @@ index b22788c50..cce674672 100644
 +
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
 +extern "C" void gl4es_glBlendFunc(GLenum sfactor, GLenum dfactor);
++extern "C" int openmw_ios_renderer_diag_enabled(void) __attribute__((weak_import));
 +extern "C" void openmw_ios_renderer_diag_blend_event(
 +    const char*, const char*, const char*) __attribute__((weak_import));
 +#endif
  
  using namespace osg;
  
-@@ -47,6 +54,20 @@ BlendFunc::~BlendFunc()
+@@ -47,6 +55,21 @@ BlendFunc::~BlendFunc()
  
  void BlendFunc::apply(State& state) const
  {
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
-+    if (openmw_ios_renderer_diag_blend_event)
++    if (openmw_ios_renderer_diag_blend_event
++        && openmw_ios_renderer_diag_enabled && openmw_ios_renderer_diag_enabled())
 +    {
 +        char detail[256];
 +        std::snprintf(detail, sizeof(detail),
@@ -124,7 +129,7 @@ index b22788c50..cce674672 100644
      if (_source_factor != _source_factor_alpha ||
          _destination_factor != _destination_factor_alpha)
      {
-@@ -62,5 +83,9 @@ void BlendFunc::apply(State& state) const
+@@ -62,5 +85,9 @@ void BlendFunc::apply(State& state) const
          }
      }
  
@@ -164,7 +169,7 @@ diff --git a/src/osg/Texture2D.cpp b/src/osg/Texture2D.cpp
 index 452b97f09..614359702 100644
 --- a/src/osg/Texture2D.cpp
 +++ b/src/osg/Texture2D.cpp
-@@ -15,10 +15,45 @@
+@@ -15,10 +15,47 @@
  #include <osg/Texture2D>
  #include <osg/State>
  #include <osg/ContextData>
@@ -173,6 +178,7 @@ index 452b97f09..614359702 100644
 +#include <cstdint>
 +
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
++extern "C" int openmw_ios_renderer_diag_enabled(void) __attribute__((weak_import));
 +extern "C" std::uint64_t openmw_ios_renderer_diag_hash(const void*, std::size_t) __attribute__((weak_import));
 +extern "C" int openmw_ios_renderer_diag_texture_category(std::uint64_t) __attribute__((weak_import));
 +extern "C" void openmw_ios_renderer_diag_register_gl_texture(
@@ -187,6 +193,7 @@ index 452b97f09..614359702 100644
 +    void registerRendererDiagnosticTexture(Texture::TextureObject* textureObject, Image* image)
 +    {
 +#if defined(__APPLE__) && defined(OPENMW_GL4ES_MANUAL_INIT)
++        if (!openmw_ios_renderer_diag_enabled || !openmw_ios_renderer_diag_enabled()) return;
 +        if (!textureObject || !image || !image->data() || !openmw_ios_renderer_diag_hash
 +            || !openmw_ios_renderer_diag_texture_category || !openmw_ios_renderer_diag_register_gl_texture)
 +            return;
@@ -210,7 +217,7 @@ index 452b97f09..614359702 100644
  Texture2D::Texture2D():
              _textureWidth(0),
              _textureHeight(0),
-@@ -281,6 +316,8 @@ void Texture2D::apply(State& state) const
+@@ -281,6 +318,8 @@ void Texture2D::apply(State& state) const
              textureObject->setAllocated(true);
          }
  
